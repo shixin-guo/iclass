@@ -1,11 +1,18 @@
 /* eslint no-console: ["error", { allow: ["warn", "error","log"] }] */
 const mongoose = require('mongoose');
+// make bluebird default Promise
+Promise = require('bluebird'); // eslint-disable-line no-global-assign
+
+// plugin bluebird promise in mongoose
+mongoose.Promise = Promise;
 
 const Schema = mongoose.Schema;
 
+
 const userSchema = new Schema({
   userName: { type: String, required: true },
-  password: { type: String, required: true },
+  userPassword: { type: String, required: true },
+  userRepassword: { type: Boolean },
   // school: String,
 });
 

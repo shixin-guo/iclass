@@ -1,27 +1,34 @@
 const userModel = require('../models/user');
 
-function signUp(res, req) {
-  const { name, password } = req.body;
-  userModel.findOne({ name, password }, function (err, doc) {
-    if (!err) {
-      const user = new userModel(req.body);
-      user.save();
-      res.send('注册成功');
+function signUp(req, res, next) {
+  // const { name, password } = req.body;
+  const name = req.body.name;
+  const password = req.body.password;
+  userModel.findOne({ 'userName': name, 'userPassword': password }, function (err, docs) {
+    if (!err ) {
+      const user = new userModel({ 'userName': name, 'userPassword': password });
+      user.save(user, function(err) {
+        if (!err) {
+          res.send('注册成功' + docs);
+        } else {
+          console.log(err);
+        }
+      });
     }
   });
 }
-function logIn(res, req) {
-  userModel.findOne({ name, password } = req.body)
-    .then('登录成功')
+function logIn(req, res) {
+  const name = req.body.name;
+  const password = req.body.password;
+  userModel.findOne({ 'userName': name, 'userPassword': password })
+    .then( () => {console.log("登录成功")})
     .catch(err => console.error(err));
 }
-function userCtrl(res, req, next) {
-  if (req) {
-    // signUp();
-    // console.log(req.body);
-    res.send('nimei');
+function userCtrl(req, res, next) {
+  if (req.body.repassword == true){
+    signUp(req, res);
   } else {
-    logIn();
+    logIn(req, res);
   }
 }
 
