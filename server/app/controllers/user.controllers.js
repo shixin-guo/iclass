@@ -21,7 +21,9 @@ function logIn(req, res) {
   const name = req.body.name;
   const password = req.body.password;
   userModel.findOne({ 'userName': name, 'userPassword': password })
-    .then( () => {console.log("登录成功")})
+    .then( () => {console.log("登录成功"); 
+      res.send('尽情玩耍吧');
+      })
     .catch(err => console.error(err));
 }
 function userCtrl(req, res, next) {
