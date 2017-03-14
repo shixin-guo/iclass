@@ -1,6 +1,6 @@
 <template>
     <div class="signUpOrLogIn">
-      <el-button type = "text" @click = "signUpOrLogIn">登录/注册</el-button>    
+      <el-button type = "text" @click = "signUpOrLogIn" class='signUpOrLogInButton' >登录/注册</el-button>    
       <el-form class= "formSignUpOrLogIn" v-if= 'ruleForm.hasClick' :rules = "rule" :model = "ruleForm" ref= "ruleForm" label-width="100px" label-position= 'left'>
         <el-form-item label="学号" prop= "user">
           <el-input v-model= "ruleForm.user"></el-input>
@@ -19,6 +19,7 @@
     </div>
 </template>
 <script>
+import axios from 'axios';
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 export default {
   name: 'signUpOrLogIn',
@@ -57,7 +58,7 @@ export default {
         pass: '',
         checkPass: '',
         hasClick: 0,
-        checkPassIfSignUp: '',
+        checkPassIfSignUp: 1,
       },
       // element-ui 的 自定义验证表单规则
       rule: {
@@ -81,6 +82,19 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // 简单验证, 然后查询数据库
+          axios({
+            method: 'post',
+            url: 'http://127.0.0.1:5000',
+            data: {
+              name: this.ruleForm.user,
+              password: this.ruleForm.password,
+              repassword: this.ruleForm.checkPass,
+            },
+          })
+          .then((response) => {
+            console.error(response.data);
+          })
+          .catch();
           // 查询成功，关闭注册框，并弹出消息
           this.signUpOrLogIn();
           this.$message({
@@ -110,5 +124,8 @@ export default {
     min-height: 21em;
     z-index: 99;
     padding: 1.5em;
+  }
+  .signUpOrLogInButton{
+    color: white;
   }
 </style>
